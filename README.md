@@ -2,4 +2,4 @@
 A simple toolkit that is made to automate the extraction of specific string based on user input rules.
 
 
-Version 3.0
+Version 3.22
