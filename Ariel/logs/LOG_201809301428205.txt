@@ -1,0 +1,22 @@
+[2018/09/30 14:28:25]I - Execution started.
+[2018/09/30 14:28:27]E - Choose document type! (PAFA or TD)
+[2018/09/30 14:28:932]I - Execution started.
+[2018/09/30 14:28:933]E - Enter team name (Service; Parts; etc.)
+[2018/09/30 14:28:131]I - Execution started.
+[2018/09/30 14:28:132]E - Enter valid ticket number.
+[2018/09/30 14:28:343]I - Execution started.
+[2018/09/30 14:28:343]E - Where will your project be placed?
+[2018/09/30 14:28:545]I - Execution started.
+[2018/09/30 14:28:546]E - Where should the source code be taken?
+[2018/09/30 14:28:63]I - Execution started.
+[2018/09/30 14:28:63]E - LPAR Username please.
+[2018/09/30 14:28:335]I - Execution started.
+[2018/09/30 14:28:335]E - LPAR Password please.
+[2018/09/30 14:28:518]I - Execution started.
+[2018/09/30 14:28:522]I - Automation started.
+[2018/09/30 14:28:523]I - Copying template files.
+[2018/09/30 14:28:523]E - CATPD(Team)_DBSi(Ver)_PF_SR_1-XXXXXXXX.doc not found. Send a ping to admin.
+[2018/09/30 14:28:398]I - Execution started.
+[2018/09/30 14:28:399]I - Automation started.
+[2018/09/30 14:28:399]I - Copying template files.
+[2018/09/30 14:28:400]E - CATPD(Team)_DBSi(Ver)_PF_SR_1-XXXXXXXX.doc not found. Send a ping to admin.
