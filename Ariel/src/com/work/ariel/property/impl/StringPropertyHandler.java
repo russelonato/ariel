@@ -32,17 +32,10 @@ public class StringPropertyHandler extends PropertyHandler{
 	public static String SAVE = "save";
 	public static String CANCEL= "cancel";
 	public static String EXECUTE = "execute";
-
-	// Tooltips
-	public static String TIP_FOLDER_LOCATION = "tipFolderLocation";
-	public static String TIP_LPAR_NUMBER = "tipLparNumber";
-	public static String TIP_ASP_GROUP = "tipAspGroup";
-	public static String TIP_USERNAME = "tipUsername";
-	public static String TIP_PASSWORD = "tipPassword";
-	public static String TIP_TEAM_NAME= "tipTeamName";
-	public static String TIP_DBS_VERSION = "tipDbsVersion";
-	public static String TIP_TICKET_NUMBER = "tipTicketNumber";
-
+	
+	//Tooltip
+	public static String TOOLIP = "tooltip";
+	
 	// Combo Values
 	public static String CMB_DB_VERSION = "cmbDbVersion";
 	

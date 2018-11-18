@@ -22,7 +22,13 @@ public abstract class PropertyHandler {
 	protected String path = null;
 	private final Logger logger = Logger.getInstance();
 	
-	public String getString(String key){
+	/**
+	 * Retrieves a property based on the input key.
+	 * 
+	 * @param key the key
+	 * @return the retrieved property
+	 */
+	public String getProperty(String key){
 		Properties props = null;
 		InputStream inStream = null;
 		try {
@@ -46,8 +52,25 @@ public abstract class PropertyHandler {
 		
 		return null;
 	}
+	
+	/**
+	 * Retrieves a property using keys that have a structure (ie. generic.specific).
+	 * 
+	 * 
+	 * @param keys the keys arranged such that the most generic is on the left and the most specific at the right
+	 * @return the retrieved property
+	 */
+	public String getProperty(String... keys) {
+		return getProperty(String.join(".", keys));
+	}
 
-	public List<String> getList(String key){
-		return Arrays.asList(getString(key).split(","));
+	/**
+	 * Retrieves a property and returns it as a list.
+	 * 
+	 * @param key the key
+	 * @return the retrieved property
+	 */
+	public List<String> getPropertyAsList(String key){
+		return Arrays.asList(getProperty(key).split(","));
 	}
 }
