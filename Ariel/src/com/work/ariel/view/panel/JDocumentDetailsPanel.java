@@ -23,7 +23,7 @@ public class JDocumentDetailsPanel extends JPanel{
 	
 	private ButtonGroup documentTypeButtonGroup;
 	private JRadioButton rbt_documentTypePAFA;
-	private JRadioButton rbt_documentTypeTP;
+	private JRadioButton rbt_documentTypeTD;
 	private JTextField txt_teamName;
 	private JComboBox<String> cmb_dbsVersion;
 	private JTextField txt_ticketNumber;
@@ -40,7 +40,7 @@ public class JDocumentDetailsPanel extends JPanel{
 		
 		documentTypeButtonGroup = new ButtonGroup();
 		rbt_documentTypePAFA = new JRadioButton("PAFA");
-		rbt_documentTypeTP = new JRadioButton("TP");
+		rbt_documentTypeTD = new JRadioButton("TD");
 		txt_teamName = new JTextField();
 		cmb_dbsVersion = new JComboBox<String>(new String[] {"5.0", "2.5"}); // TODO These values must eventually moved to an external file.
 		txt_ticketNumber = new JTextField();
@@ -58,10 +58,10 @@ public class JDocumentDetailsPanel extends JPanel{
 		add(lbl_ticketNumber);
 		
 		documentTypeButtonGroup.add(rbt_documentTypePAFA);
-		documentTypeButtonGroup.add(rbt_documentTypeTP);
+		documentTypeButtonGroup.add(rbt_documentTypeTD);
 		
 		add(rbt_documentTypePAFA);
-		add(rbt_documentTypeTP);
+		add(rbt_documentTypeTD);
 		add(txt_teamName);
 		add(cmb_dbsVersion);
 		add(txt_ticketNumber);
@@ -92,10 +92,10 @@ public class JDocumentDetailsPanel extends JPanel{
 		layout.putConstraint(SpringLayout.WEST, lbl_ticketNumber, 10, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.NORTH, lbl_ticketNumber, 30, SpringLayout.NORTH, lbl_dbsVersion);
 
-		layout.putConstraint(SpringLayout.EAST, rbt_documentTypeTP, -10, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, rbt_documentTypeTP, 10, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.EAST, rbt_documentTypeTD, -10, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, rbt_documentTypeTD, 10, SpringLayout.NORTH, this);
 		
-		layout.putConstraint(SpringLayout.EAST, rbt_documentTypePAFA, -10, SpringLayout.WEST, rbt_documentTypeTP);
+		layout.putConstraint(SpringLayout.EAST, rbt_documentTypePAFA, -10, SpringLayout.WEST, rbt_documentTypeTD);
 		layout.putConstraint(SpringLayout.NORTH, rbt_documentTypePAFA, 10, SpringLayout.NORTH, this);
 
 		layout.putConstraint(SpringLayout.EAST, txt_teamName, -10, SpringLayout.EAST, this);
@@ -111,7 +111,7 @@ public class JDocumentDetailsPanel extends JPanel{
 	public String getSelectedDocumentType() {
 		if(rbt_documentTypePAFA.isSelected()) {
 			return SystemConstants.DOCUMENT_TYPE_PAFA;
-		}else if(rbt_documentTypeTP.isSelected()){
+		}else if(rbt_documentTypeTD.isSelected()){
 			return SystemConstants.DOCUMENT_TYPE_TP;
 		}
 		
