@@ -38,6 +38,8 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 		add(pnl_details);
 		add(pnl_hint);
 		add(btn_execute);
+	
+		pnl_hint.setHint();
 		
 		btn_execute.addActionListener(this);
 
@@ -73,6 +75,8 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 		String aspGroup = pnl_details.getPnl_ftpDetails().getAspGroup();
 		String username = pnl_details.getPnl_ftpDetails().getUsername();
 		String password = pnl_details.getPnl_ftpDetails().getPassword();
+		
+		pnl_hint.setHint();
 		
 		try {
 			logger.logInfo(SystemMessages.EXECUTION_STARTED);

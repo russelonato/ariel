@@ -1,11 +1,18 @@
 package com.work.ariel.view.panel;
 
+import static com.work.ariel.property.impl.StringPropertyHandler.*;
+
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
+
+import com.work.ariel.property.impl.StringPropertyHandler;
 
 public class JHintAreaPanel extends JPanel{
 	
@@ -26,6 +33,20 @@ public class JHintAreaPanel extends JPanel{
 		add(txa_hint);
 		
 		setLayout();
+	}
+	
+	public void setHint() {
+		List<String> hints = new ArrayList<String>();
+		
+		String hint = null;
+		int index = 1;
+		
+		while(!(hint = StringPropertyHandler.getInstance().getProperty(HINT, String.valueOf(index))).equals("")) {
+			hints.add(hint);
+			index++;
+		}
+		
+		txa_hint.setText(hints.get(new Random().nextInt(hints.size())));
 	}
 	
 	private void setLayout() {
