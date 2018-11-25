@@ -44,6 +44,9 @@ public class DownloadFilesManagerImpl implements IDownloadFilesManager {
 			preexecutionDate = new Date();
 
 			batExecutor.execute(filePath + "\\" + SystemFiles.BAT_FILE);
+			
+			new File(filePath + "\\" + SystemFiles.SCRIPT_FILE).delete();
+			new File(filePath + "\\" + SystemFiles.BAT_FILE).delete();
 
 			postExecutionDate = new Date();
 
