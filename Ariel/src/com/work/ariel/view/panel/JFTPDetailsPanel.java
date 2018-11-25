@@ -1,6 +1,13 @@
 package com.work.ariel.view.panel;
 
-import static com.work.ariel.property.impl.StringPropertyHandler.*;
+import static com.work.ariel.property.impl.StringPropertyHandler.BROWSE;
+import static com.work.ariel.property.impl.StringPropertyHandler.ENV_ASP_GROUP;
+import static com.work.ariel.property.impl.StringPropertyHandler.FOLDER_LOCATION;
+import static com.work.ariel.property.impl.StringPropertyHandler.FTP_DETAILS;
+import static com.work.ariel.property.impl.StringPropertyHandler.LPAR_NUMBER;
+import static com.work.ariel.property.impl.StringPropertyHandler.PASSWORD;
+import static com.work.ariel.property.impl.StringPropertyHandler.TOOLIP;
+import static com.work.ariel.property.impl.StringPropertyHandler.USERNAME;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -9,7 +16,6 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -17,17 +23,18 @@ import javax.swing.SpringLayout;
 
 import com.work.ariel.property.impl.StringPropertyHandler;
 import com.work.ariel.property.interfce.PropertyHandler;
+import com.work.ariel.view.label.JCustomLabel;
 
 public class JFTPDetailsPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -7161098503952761358L;
 	
 	private final PropertyHandler props = StringPropertyHandler.getInstance();
 	
-	private JLabel lbl_folderLocation;
-	private JLabel lbl_lparNumber;
-	private JLabel lbl_envAspGroup;
-	private JLabel lbl_username;
-	private JLabel lbl_password;
+	private JCustomLabel lbl_folderLocation;
+	private JCustomLabel lbl_lparNumber;
+	private JCustomLabel lbl_envAspGroup;
+	private JCustomLabel lbl_username;
+	private JCustomLabel lbl_password;
 	
 	private JTextField txt_folderLocation;
 	private JButton btn_browseFolderLocation;
@@ -43,11 +50,11 @@ public class JFTPDetailsPanel extends JPanel implements ActionListener{
 	}
 	
 	private void initialize() {
-		lbl_folderLocation = new JLabel(props.getProperty(FOLDER_LOCATION));
-		lbl_lparNumber = new JLabel(props.getProperty(LPAR_NUMBER));
-		lbl_envAspGroup = new JLabel(props.getProperty(ENV_ASP_GROUP));
-		lbl_username = new JLabel(props.getProperty(USERNAME));
-		lbl_password = new JLabel(props.getProperty(PASSWORD));
+		lbl_folderLocation = new JCustomLabel(props.getProperty(FOLDER_LOCATION));
+		lbl_lparNumber = new JCustomLabel(props.getProperty(LPAR_NUMBER));
+		lbl_envAspGroup = new JCustomLabel(props.getProperty(ENV_ASP_GROUP));
+		lbl_username = new JCustomLabel(props.getProperty(USERNAME));
+		lbl_password = new JCustomLabel(props.getProperty(PASSWORD));
 		
 		txt_folderLocation = new JTextField();
 		btn_browseFolderLocation = new JButton(props.getProperty(BROWSE));
@@ -55,6 +62,11 @@ public class JFTPDetailsPanel extends JPanel implements ActionListener{
 		txt_aspGroup = new JTextField();
 		txt_username = new JTextField();
 		txt_password = new JPasswordField();
+		
+		lbl_folderLocation.setAsRequired();
+		lbl_lparNumber.setAsRequired();
+		lbl_username.setAsRequired();
+		lbl_password.setAsRequired();
 		
 		txt_folderLocation.setToolTipText(props.getProperty(TOOLIP, FOLDER_LOCATION));
 		txt_lparNumber.setToolTipText(props.getProperty(TOOLIP, LPAR_NUMBER));
