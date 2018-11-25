@@ -13,10 +13,13 @@ import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
 import com.work.ariel.property.impl.StringPropertyHandler;
+import com.work.ariel.property.interfce.PropertyHandler;
 
 public class JHintAreaPanel extends JPanel{
 	
 	private static final long serialVersionUID = 6801112539767495147L;
+	
+	private final PropertyHandler props = StringPropertyHandler.getInstance();
 	
 	private JTextArea txa_hint;
 	
@@ -27,7 +30,7 @@ public class JHintAreaPanel extends JPanel{
 	private void initialize() {
 		txa_hint = new JTextArea(5, 20);
 		
-		setBorder(BorderFactory.createTitledBorder("Hint"));
+		setBorder(BorderFactory.createTitledBorder(props.getProperty(HINT)));
 		setPreferredSize(new Dimension(780, 100));
 		
 		add(txa_hint);

@@ -16,7 +16,7 @@ public class StringPropertyHandler extends PropertyHandler{
 	public static String FTP_DETAILS = "ftpDetails";
 	public static String FOLDER_LOCATION = "folderLocation";
 	public static String LPAR_NUMBER = "lparNumber";
-	public static String ENV_AS_GROUP = "envAspGroup";
+	public static String ENV_ASP_GROUP = "envAspGroup";
 	public static String USERNAME = "username";
 	public static String PASSWORD = "password";
 	public static String BROWSE = "browse";
@@ -26,12 +26,13 @@ public class StringPropertyHandler extends PropertyHandler{
 	public static String DBS_VERSION = "dbsVersion";
 	public static String TICKET_NUMBER = "ticketNumber";
 	public static String PAFA = "pafa";
-	public static String TD_ = "td";
+	public static String TD = "td";
 	public static String HINT = "hint";
 	public static String SPACING = "spacing";
 	public static String SAVE = "save";
 	public static String CANCEL= "cancel";
 	public static String EXECUTE = "execute";
+	public static String ABOUT = "about";
 	
 	//Tooltip
 	public static String TOOLIP = "tooltip";

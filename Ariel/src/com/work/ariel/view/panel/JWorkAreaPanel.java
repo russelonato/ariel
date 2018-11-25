@@ -1,5 +1,7 @@
 package com.work.ariel.view.panel;
 
+import static com.work.ariel.property.impl.StringPropertyHandler.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -12,12 +14,16 @@ import javax.swing.SpringLayout;
 
 import com.work.ariel.controller.ExecuteAutomationController;
 import com.work.ariel.exception.ValidationException;
+import com.work.ariel.property.impl.StringPropertyHandler;
+import com.work.ariel.property.interfce.PropertyHandler;
 import com.work.ariel.system.SystemMessages;
 import com.work.ariel.util.Logger;
 import com.work.ariel.validation.WorkAreaPanelValidation;
 
 public class JWorkAreaPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 9196892803414654034L;
+	
+	private final PropertyHandler props = StringPropertyHandler.getInstance();
 	
 	private final Logger logger = Logger.getInstance();
 
@@ -33,7 +39,7 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 
 		pnl_details = new JDetailsPanel();
 		pnl_hint = new JHintAreaPanel();
-		btn_execute = new JButton("Execute");
+		btn_execute = new JButton(props.getProperty(EXECUTE));
 
 		add(pnl_details);
 		add(pnl_hint);

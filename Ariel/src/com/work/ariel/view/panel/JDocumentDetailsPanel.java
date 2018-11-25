@@ -1,5 +1,7 @@
 package com.work.ariel.view.panel;
 
+import static com.work.ariel.property.impl.StringPropertyHandler.*;
+
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -11,10 +13,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import com.work.ariel.property.impl.StringPropertyHandler;
+import com.work.ariel.property.interfce.PropertyHandler;
 import com.work.ariel.system.SystemConstants;
 
 public class JDocumentDetailsPanel extends JPanel{
 	private static final long serialVersionUID = 7217175411139634957L;
+	
+	private final PropertyHandler props = StringPropertyHandler.getInstance();
 	
 	private JLabel lbl_documentType;
 	private JLabel lbl_teamName;
@@ -33,23 +39,23 @@ public class JDocumentDetailsPanel extends JPanel{
 	}
 	
 	private void initialize() {
-		lbl_documentType = new JLabel("Document Type *");
-		lbl_teamName = new JLabel("Team Name *");
-		lbl_dbsVersion = new JLabel("DBS Version *");
-		lbl_ticketNumber = new JLabel("Ticket Number *");
+		lbl_documentType = new JLabel(props.getProperty(DOCUMENT_TYPE));
+		lbl_teamName = new JLabel(props.getProperty(TEAM_NAME));
+		lbl_dbsVersion = new JLabel(props.getProperty(DBS_VERSION));
+		lbl_ticketNumber = new JLabel(props.getProperty(TICKET_NUMBER));
 		
 		documentTypeButtonGroup = new ButtonGroup();
-		rbt_documentTypePAFA = new JRadioButton("PAFA");
-		rbt_documentTypeTD = new JRadioButton("TD");
+		rbt_documentTypePAFA = new JRadioButton(props.getProperty(PAFA));
+		rbt_documentTypeTD = new JRadioButton(props.getProperty(TD));
 		txt_teamName = new JTextField();
-		cmb_dbsVersion = new JComboBox<String>(new String[] {"5.0", "2.5"}); // TODO These values must eventually moved to an external file.
+		cmb_dbsVersion = new JComboBox<String>(props.getPropertyAsList(CMB_DB_VERSION).toArray(new String[0]));
 		txt_ticketNumber = new JTextField();
 		
-		txt_teamName.setToolTipText("Sample Tooltip"); // TODO Determine where to retrieve tooltips / what tooltips to use
-		cmb_dbsVersion.setToolTipText("Sample Tooltip"); // TODO Determine where to retrieve tooltips / what tooltips to use
-		txt_ticketNumber.setToolTipText("Sample Tooltip"); // TODO Determine where to retrieve tooltips / what tooltips to use
+		txt_teamName.setToolTipText(props.getProperty(TOOLIP, TEAM_NAME));
+		cmb_dbsVersion.setToolTipText(props.getProperty(TOOLIP, DBS_VERSION)); 
+		txt_ticketNumber.setToolTipText(props.getProperty(TOOLIP, TICKET_NUMBER)); 
 		
-		setBorder(BorderFactory.createTitledBorder("Document Details"));
+		setBorder(BorderFactory.createTitledBorder(props.getProperty(DOCUMENT_DETAILS)));
 		setPreferredSize(new Dimension(300, 200));
 
 		add(lbl_documentType);
