@@ -44,6 +44,8 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 			if (rawLines.get(index).contains(searchClause)) {
 				if (cleanLines == null) {
 					cleanLines = new ArrayList<String>();
+					cleanLines.add("<html>"); // TODO This is a temporary fix. CleanFileManager must be fixed in the next iteration
+					cleanLines.add("<body>");
 				}
 
 				if (!isInsideRange) {
@@ -85,7 +87,13 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 					}
 
 					for (int innerInnerIndex = startIndex; innerInnerIndex <= endIndex; innerInnerIndex++) {
-						cleanLines.add(rawLines.get(innerInnerIndex));
+						if(cleanLines.contains(searchClause)) {
+							cleanLines.add("<span style='background-color: #40e0d0'>" + rawLines.get(innerInnerIndex) + "</span>");
+						}else {
+							cleanLines.add(rawLines.get(innerInnerIndex));
+							
+						}
+						
 
 					} // end for
 
@@ -100,8 +108,11 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 			}
 		}
 
+		cleanLines.add("</body>");
+		cleanLines.add("</html>");
+
 		if(cleanLines != null) {
-			fileUtil.writeFile(new File(outputFile), cleanLines);
+			fileUtil.writeFile(new File(outputFile.replace("txt", "html")), cleanLines);
 		}
 
 	}
