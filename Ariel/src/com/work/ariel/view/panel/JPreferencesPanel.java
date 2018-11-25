@@ -1,5 +1,7 @@
 package com.work.ariel.view.panel;
 
+import static com.work.ariel.property.impl.StringPropertyHandler.*;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,13 +14,17 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 
+import com.work.ariel.property.impl.StringPropertyHandler;
+import com.work.ariel.property.interfce.PropertyHandler;
 import com.work.ariel.system.SystemConfig;
 
 public class JPreferencesPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -3176042373722527234L;
 	private final SystemConfig systemConfig = SystemConfig.getInstance();
+	
+	private final PropertyHandler props = StringPropertyHandler.getInstance();
 
-	private JLabel lbl_templateTp;
+	private JLabel lbl_templateTd;
 	private JLabel lbl_templatePafa;
 	private JLabel lbl_spacing;
 
@@ -39,23 +45,23 @@ public class JPreferencesPanel extends JPanel implements ActionListener{
 	}
 
 	private void initialize() {
-		lbl_templateTp = new JLabel("TP");
-		lbl_templatePafa = new JLabel("PAFA");
-		lbl_spacing = new JLabel("Spacing");
+		lbl_templateTd = new JLabel(props.getProperty(TD));
+		lbl_templatePafa = new JLabel(props.getProperty(PAFA));
+		lbl_spacing = new JLabel(props.getProperty(SPACING));
 
 		txt_templateTp = new JTextField((String) systemConfig.getConfig(SystemConfig.TEMPLATE_FILE_TP));
 		txt_templatePafa = new JTextField((String) systemConfig.getConfig(SystemConfig.TEMPLATE_FILE_PAFA));
 		txt_spacing = new JTextField((String) systemConfig.getConfig(SystemConfig.SPACING));
 
-		btn_templateTp = new JButton("Browse");
-		btn_templatePafa = new JButton("Browse");
+		btn_templateTp = new JButton(props.getProperty(BROWSE));
+		btn_templatePafa = new JButton(props.getProperty(BROWSE));
 
-		btn_save = new JButton("Save");
-		btn_cancel = new JButton("Cancel");
+		btn_save = new JButton(props.getProperty(SAVE));
+		btn_cancel = new JButton(props.getProperty(CANCEL));
 		
 		csr_browseFolderLocation = new JFileChooser();
 		
-		add(lbl_templateTp);
+		add(lbl_templateTd);
 		add(lbl_templatePafa);
 		add(lbl_spacing);
 		
@@ -89,16 +95,16 @@ public class JPreferencesPanel extends JPanel implements ActionListener{
 		
 		setLayout(layout);
 		
-		layout.putConstraint(SpringLayout.WEST, lbl_templateTp, 10, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.NORTH, lbl_templateTp, 30, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.WEST, lbl_templateTd, 10, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.NORTH, lbl_templateTd, 30, SpringLayout.NORTH, this);
 		
 		layout.putConstraint(SpringLayout.WEST, lbl_templatePafa, 10, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.NORTH, lbl_templatePafa, 30, SpringLayout.NORTH, lbl_templateTp);
+		layout.putConstraint(SpringLayout.NORTH, lbl_templatePafa, 30, SpringLayout.NORTH, lbl_templateTd);
 		
 		layout.putConstraint(SpringLayout.WEST, lbl_spacing, 10, SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.NORTH, lbl_spacing, 30, SpringLayout.NORTH, lbl_templatePafa);
 
-		layout.putConstraint(SpringLayout.WEST, txt_templateTp, 10, SpringLayout.EAST, lbl_templateTp);
+		layout.putConstraint(SpringLayout.WEST, txt_templateTp, 10, SpringLayout.EAST, lbl_templateTd);
 		layout.putConstraint(SpringLayout.EAST, txt_templateTp, -10, SpringLayout.WEST, btn_templateTp);
 		layout.putConstraint(SpringLayout.NORTH, txt_templateTp, 30, SpringLayout.NORTH, this);
 		

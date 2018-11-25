@@ -1,5 +1,7 @@
 package com.work.ariel.view.panel;
 
+import static com.work.ariel.property.impl.StringPropertyHandler.*;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +15,13 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import com.work.ariel.property.impl.StringPropertyHandler;
+import com.work.ariel.property.interfce.PropertyHandler;
+
 public class JFTPDetailsPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -7161098503952761358L;
+	
+	private final PropertyHandler props = StringPropertyHandler.getInstance();
 	
 	private JLabel lbl_folderLocation;
 	private JLabel lbl_lparNumber;
@@ -36,28 +43,28 @@ public class JFTPDetailsPanel extends JPanel implements ActionListener{
 	}
 	
 	private void initialize() {
-		lbl_folderLocation = new JLabel("Folder Location *");
-		lbl_lparNumber = new JLabel("LPAR Number *");
-		lbl_envAspGroup = new JLabel("ENV ASP Group");
-		lbl_username = new JLabel("Username *");
-		lbl_password = new JLabel("Password *");
+		lbl_folderLocation = new JLabel(props.getProperty(FOLDER_LOCATION));
+		lbl_lparNumber = new JLabel(props.getProperty(LPAR_NUMBER));
+		lbl_envAspGroup = new JLabel(props.getProperty(ENV_ASP_GROUP));
+		lbl_username = new JLabel(props.getProperty(USERNAME));
+		lbl_password = new JLabel(props.getProperty(PASSWORD));
 		
 		txt_folderLocation = new JTextField();
-		btn_browseFolderLocation = new JButton("Browse");
+		btn_browseFolderLocation = new JButton(props.getProperty(BROWSE));
 		txt_lparNumber = new JTextField();
 		txt_aspGroup = new JTextField();
 		txt_username = new JTextField();
 		txt_password = new JPasswordField();
 		
-		btn_browseFolderLocation.setToolTipText("Sample Text"); // TODO Determine where to retrieve tooltips / what tooltips to use
-		txt_lparNumber.setToolTipText("Sample Text"); // TODO Determine where to retrieve tooltips / what tooltips to use
-		txt_aspGroup.setToolTipText("Sample Text"); // TODO Determine where to retrieve tooltips / what tooltips to use
-		txt_username.setToolTipText("Sample Text"); // TODO Determine where to retrieve tooltips / what tooltips to use
-		txt_password.setToolTipText("Sample Text"); // TODO Determine where to retrieve tooltips / what tooltips to use
+		txt_folderLocation.setToolTipText(props.getProperty(TOOLIP, FOLDER_LOCATION));
+		txt_lparNumber.setToolTipText(props.getProperty(TOOLIP, LPAR_NUMBER));
+		txt_aspGroup.setToolTipText(props.getProperty(TOOLIP, ENV_ASP_GROUP));
+		txt_username.setToolTipText(props.getProperty(TOOLIP, USERNAME));
+		txt_password.setToolTipText(props.getProperty(TOOLIP, PASSWORD));
 		
 		csr_browseFolderLocation = new JFileChooser();
 		
-		setBorder(BorderFactory.createTitledBorder("FTP Details"));
+		setBorder(BorderFactory.createTitledBorder(props.getProperty(FTP_DETAILS)));
 		setPreferredSize(new Dimension(460, 200));
 
 		add(lbl_folderLocation);
