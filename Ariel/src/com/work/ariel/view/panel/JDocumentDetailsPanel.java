@@ -1,13 +1,20 @@
 package com.work.ariel.view.panel;
 
-import static com.work.ariel.property.impl.StringPropertyHandler.*;
+import static com.work.ariel.property.impl.StringPropertyHandler.CMB_DB_VERSION;
+import static com.work.ariel.property.impl.StringPropertyHandler.DBS_VERSION;
+import static com.work.ariel.property.impl.StringPropertyHandler.DOCUMENT_DETAILS;
+import static com.work.ariel.property.impl.StringPropertyHandler.DOCUMENT_TYPE;
+import static com.work.ariel.property.impl.StringPropertyHandler.PAFA;
+import static com.work.ariel.property.impl.StringPropertyHandler.TD;
+import static com.work.ariel.property.impl.StringPropertyHandler.TEAM_NAME;
+import static com.work.ariel.property.impl.StringPropertyHandler.TICKET_NUMBER;
+import static com.work.ariel.property.impl.StringPropertyHandler.TOOLIP;
 
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -16,16 +23,17 @@ import javax.swing.SpringLayout;
 import com.work.ariel.property.impl.StringPropertyHandler;
 import com.work.ariel.property.interfce.PropertyHandler;
 import com.work.ariel.system.SystemConstants;
+import com.work.ariel.view.label.JCustomLabel;
 
 public class JDocumentDetailsPanel extends JPanel{
 	private static final long serialVersionUID = 7217175411139634957L;
 	
 	private final PropertyHandler props = StringPropertyHandler.getInstance();
 	
-	private JLabel lbl_documentType;
-	private JLabel lbl_teamName;
-	private JLabel lbl_dbsVersion;
-	private JLabel lbl_ticketNumber;
+	private JCustomLabel lbl_documentType;
+	private JCustomLabel lbl_teamName;
+	private JCustomLabel lbl_dbsVersion;
+	private JCustomLabel lbl_ticketNumber;
 	
 	private ButtonGroup documentTypeButtonGroup;
 	private JRadioButton rbt_documentTypePAFA;
@@ -39,10 +47,10 @@ public class JDocumentDetailsPanel extends JPanel{
 	}
 	
 	private void initialize() {
-		lbl_documentType = new JLabel(props.getProperty(DOCUMENT_TYPE));
-		lbl_teamName = new JLabel(props.getProperty(TEAM_NAME));
-		lbl_dbsVersion = new JLabel(props.getProperty(DBS_VERSION));
-		lbl_ticketNumber = new JLabel(props.getProperty(TICKET_NUMBER));
+		lbl_documentType = new JCustomLabel(props.getProperty(DOCUMENT_TYPE));
+		lbl_teamName = new JCustomLabel(props.getProperty(TEAM_NAME));
+		lbl_dbsVersion = new JCustomLabel(props.getProperty(DBS_VERSION));
+		lbl_ticketNumber = new JCustomLabel(props.getProperty(TICKET_NUMBER));
 		
 		documentTypeButtonGroup = new ButtonGroup();
 		rbt_documentTypePAFA = new JRadioButton(props.getProperty(PAFA));
@@ -50,6 +58,11 @@ public class JDocumentDetailsPanel extends JPanel{
 		txt_teamName = new JTextField();
 		cmb_dbsVersion = new JComboBox<String>(props.getPropertyAsList(CMB_DB_VERSION).toArray(new String[0]));
 		txt_ticketNumber = new JTextField();
+		
+		lbl_documentType.setAsRequired();
+		lbl_teamName.setAsRequired();
+		lbl_dbsVersion.setAsRequired();
+		lbl_ticketNumber.setAsRequired();
 		
 		txt_teamName.setToolTipText(props.getProperty(TOOLIP, TEAM_NAME));
 		cmb_dbsVersion.setToolTipText(props.getProperty(TOOLIP, DBS_VERSION)); 
