@@ -1,7 +1,6 @@
 package com.work.ariel.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -14,11 +13,13 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.work.ariel.exception.SystemException;
+
 /**
  * A logger utility class that handles logging into a log file.
  * 
  * @since Ariel v2.0
- * @version 1.0
+ * @version 2.0
  * @author Gabrang, Mary Ann
  *
  */
@@ -58,11 +59,9 @@ public class Logger {
 	 * @param message
 	 */
 	public void log(String message) {
-		FileUtil fileUtil = null;
 		SimpleDateFormat formatter = null;
 		Date date = null;
 
-		fileUtil = new FileUtil();
 		formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:SS");
 		date = new Date();
 
@@ -75,8 +74,8 @@ public class Logger {
 		logs.append(message + "\n");
 
 		try {
-			fileUtil.writeFile(logFile, message);
-		} catch (IOException e) {
+			FileUtil.writeFile(logFile, message);
+		} catch (SystemException e) {
 			e.printStackTrace();
 		}
 	}

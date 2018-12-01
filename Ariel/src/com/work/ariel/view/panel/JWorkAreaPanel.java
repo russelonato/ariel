@@ -1,31 +1,28 @@
 package com.work.ariel.view.panel;
 
-import static com.work.ariel.property.impl.StringPropertyHandler.*;
+import static com.work.ariel.property.impl.StringPropertyHandler.EXECUTE;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
-import com.work.ariel.controller.ExecuteAutomationController;
+import com.work.ariel.exception.SystemException;
 import com.work.ariel.exception.ValidationException;
 import com.work.ariel.property.impl.StringPropertyHandler;
 import com.work.ariel.property.interfce.PropertyHandler;
+import com.work.ariel.service.impl.BasicLaundrymat;
+import com.work.ariel.service.interfce.ILaundrymat;
 import com.work.ariel.system.SystemMessages;
-import com.work.ariel.util.Logger;
 import com.work.ariel.validation.WorkAreaPanelValidation;
 
-public class JWorkAreaPanel extends JPanel implements ActionListener{
+public class JWorkAreaPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 9196892803414654034L;
-	
+
 	private final PropertyHandler props = StringPropertyHandler.getInstance();
-	
-	private final Logger logger = Logger.getInstance();
 
 	private JDetailsPanel pnl_details;
 	private JHintAreaPanel pnl_hint;
@@ -34,7 +31,7 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 	public JWorkAreaPanel() {
 		initialize();
 	}
-	
+
 	private void initialize() {
 
 		pnl_details = new JDetailsPanel();
@@ -44,9 +41,9 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 		add(pnl_details);
 		add(pnl_hint);
 		add(btn_execute);
-	
+
 		pnl_hint.setHint();
-		
+
 		btn_execute.addActionListener(this);
 
 		setLayout();
@@ -66,10 +63,10 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 	}
 
 	private void doBtn_executeIsClicked() {
-		ExecuteAutomationController executeAutomationController = null;
+		ILaundrymat laundrymat = null;
 		WorkAreaPanelValidation validation = null;
 
-		executeAutomationController = new ExecuteAutomationController();
+		laundrymat = new BasicLaundrymat();
 		validation = new WorkAreaPanelValidation();
 
 		String documentType = pnl_details.getPnl_documentDetails().getSelectedDocumentType();
@@ -81,37 +78,22 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 		String aspGroup = pnl_details.getPnl_ftpDetails().getAspGroup();
 		String username = pnl_details.getPnl_ftpDetails().getUsername();
 		String password = pnl_details.getPnl_ftpDetails().getPassword();
-		
+
 		pnl_hint.setHint();
-		
+
 		try {
-			logger.logInfo(SystemMessages.EXECUTION_STARTED);
-			
-			System.out.println(folderLocation);
 			validation.validate(documentType, teamName, dbsVersion, ticketNumber, folderLocation, lparNumber, aspGroup,
 					username, password);
-			executeAutomationController.doExecuteAutomation(documentType, teamName, Double.parseDouble(dbsVersion),
-					ticketNumber, folderLocation, lparNumber, aspGroup, username, password);
-			
-			logger.logInfo(SystemMessages.EXECUTION_DONE);
-			
+			laundrymat.subtmitJob(documentType, teamName, dbsVersion, ticketNumber, folderLocation, lparNumber,
+					aspGroup, username, password);
+
 			JOptionPane.showMessageDialog(this, SystemMessages.EXECUTION_DONE, SystemMessages.EXECUTION_SUCCESSFUL,
 					JOptionPane.OK_OPTION);
 		} catch (ValidationException e) {
-			logger.logError(e.getMessage());
-			
 			JOptionPane.showMessageDialog(this, e.getMessage(), SystemMessages.INVALID_INPUT,
 					JOptionPane.ERROR_MESSAGE);
-		} catch (FileNotFoundException e) {
-			logger.logError(e.getMessage());
-			
-			JOptionPane.showMessageDialog(this, e.getMessage(), SystemMessages.FILE_NOT_FOUND,
-					JOptionPane.ERROR_MESSAGE);
-		} catch (IOException e) {
-			logger.logError(e.getMessage());
-			
-			JOptionPane.showMessageDialog(this, e.getMessage(), SystemMessages.IO_ERROR,
-					JOptionPane.ERROR_MESSAGE);
+		} catch (SystemException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -121,7 +103,7 @@ public class JWorkAreaPanel extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btn_execute) {
+		if (e.getSource() == btn_execute) {
 			doBtn_executeIsClicked();
 		}
 	}

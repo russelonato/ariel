@@ -14,7 +14,7 @@ import com.work.ariel.util.Logger;
  * 
  * @since Ariel v2.0
  * @version 1.0
- * @author Onato, Russel Jan
+ * @author Gabrang, Mary Ann
  *
  */
 public abstract class PropertyHandler {

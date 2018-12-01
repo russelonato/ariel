@@ -1,0 +1,7 @@
+open <lparNumber>
+<username>
+<password>
+quote rcmd setaspgrp <aspGroup>
+hash
+get <library>/<fileName>.<memberName> <filePath>
+quit
