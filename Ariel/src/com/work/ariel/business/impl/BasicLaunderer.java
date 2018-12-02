@@ -1,31 +1,21 @@
-package com.work.ariel.service.impl;
+package com.work.ariel.business.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.work.ariel.service.interfce.ICleanFileManager;
+import com.work.ariel.business.interfce.ILaunderer;
+import com.work.ariel.exception.SystemException;
 import com.work.ariel.util.FileUtil;
 
-/**
- * An implementation class that implements ICleanFileManager
- * 
- * @since Ariel v2.0
- * @version 1.0
- * @author Gabrang, Mary Ann
- *
- */
-public class CleanFileManagerImpl implements ICleanFileManager {
+public class BasicLaunderer implements ILaunderer {
 
 	@Override
-	public void clean(String targetFile, String outputFile, String searchClause, int range) throws IOException {
-		FileUtil fileUtil = null;
+	public void doLaundry(File input, String clause, int range) throws SystemException {
 		List<String> rawLines = null;
 		List<String> cleanLines = null;
 
-		fileUtil = new FileUtil();
-		rawLines = fileUtil.readFile(new File(targetFile));
+		rawLines = FileUtil.readFile(input);
 
 		int currentSectionIndex = 0;
 		boolean isSectionPrinted = false; // Flag to check if section is already printed
@@ -41,11 +31,9 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 				isSectionPrinted = false;
 			}
 
-			if (rawLines.get(index).contains(searchClause)) {
+			if (rawLines.get(index).contains(clause)) {
 				if (cleanLines == null) {
 					cleanLines = new ArrayList<String>();
-					cleanLines.add("<html>"); // TODO This is a temporary fix. CleanFileManager must be fixed in the next iteration
-					cleanLines.add("<body>");
 				}
 
 				if (!isInsideRange) {
@@ -70,7 +58,7 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 				boolean isReadyToPrint = true;
 
 				for (int innerIndex = index + 1; innerIndex <= endIndex; innerIndex++) {
-					if (rawLines.get(innerIndex).contains(searchClause)) {
+					if (rawLines.get(innerIndex).contains(clause)) {
 						isReadyToPrint = false; // searchClause found. Include next instance to current set.
 						break;
 					}
@@ -87,15 +75,9 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 					}
 
 					for (int innerInnerIndex = startIndex; innerInnerIndex <= endIndex; innerInnerIndex++) {
-						if(cleanLines.contains(searchClause)) {
-							cleanLines.add("<span style='background-color: #40e0d0'>" + rawLines.get(innerInnerIndex) + "</span>");
-						}else {
-							cleanLines.add(rawLines.get(innerInnerIndex));
-							
-						}
-						
+						cleanLines.add(rawLines.get(innerInnerIndex));
 
-					} // end for
+					}
 
 					cleanLines.add(":");
 					cleanLines.add(":");
@@ -108,12 +90,9 @@ public class CleanFileManagerImpl implements ICleanFileManager {
 			}
 		}
 
-		cleanLines.add("</body>");
-		cleanLines.add("</html>");
-
-		if(cleanLines != null) {
-			fileUtil.writeFile(new File(outputFile.replace("txt", "html")), cleanLines);
+		if (cleanLines != null) {
+			FileUtil.writeFile(FileUtil.toFile(input.getParent(), "edit_" + input.getName()), cleanLines);
 		}
-
 	}
+
 }

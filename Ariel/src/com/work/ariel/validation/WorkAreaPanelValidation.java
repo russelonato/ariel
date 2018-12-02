@@ -27,12 +27,6 @@ public class WorkAreaPanelValidation {
 			throw new ValidationException(SystemMessages.INVALID_DBS_VERSION);
 		}
 
-		try {
-			Double.parseDouble(dbsVersion);
-		} catch (NumberFormatException e) {
-			throw new ValidationException(SystemMessages.INVALID_DBS_VERSION);
-		}
-
 		if (ticketNumber == null || ticketNumber.isEmpty()) {
 			throw new ValidationException(SystemMessages.INVALID_TICKET_NUMER);
 		}

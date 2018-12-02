@@ -1,6 +1,10 @@
 package com.work.ariel.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+
+import com.work.ariel.exception.SystemException;
 
 /**
  * A utility class that handles bat executions.
@@ -11,22 +15,30 @@ import java.io.IOException;
  *
  */
 public class BatExecutor {
-
+	
 	/**
-	 * Executes the command specified by the parameter batPath.
+	 * Executes the command specified by the parameter.
 	 * 
-	 * @param batPath
+	 * @param bat the batch file to execute
 	 */
-	public void execute(String batPath) throws IOException {
+	public void execute(File bat) throws SystemException{
 		Process process = null;
-
-		process = Runtime.getRuntime().exec("cmd /c start /wait " + batPath);
+		Date preDate = null;
+		Date postDate = null;
 		
 		try {
+			preDate = new Date();
+			
+			process = Runtime.getRuntime().exec("cmd /c start /wait " + bat.getAbsolutePath());
 			process.waitFor();
-		} catch (InterruptedException e) {
-			// TODO Decide if this needs to be logged.
-			e.printStackTrace();
+			
+			postDate = new Date();
+			
+			Logger.getInstance().logInfo("Total time elapsed: " + (postDate.getTime() - preDate.getTime()) + " ms");
+		}catch(IOException e) {
+			throw new SystemException(e.getMessage(), e.getCause());
+		}catch (InterruptedException e) {
+			throw new SystemException(e.getMessage(), e.getCause());
 		}
 	}
 }
