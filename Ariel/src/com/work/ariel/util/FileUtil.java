@@ -128,6 +128,16 @@ public class FileUtil {
 			}
 		}
 	}
+	
+	/**
+	 * Creates a file based on the given parameters.
+	 * 
+	 * @param fileName
+	 * @return the created file
+	 */
+	public static File toFile(String fileName) {
+		return new File(fileName);
+	}
 
 	/**
 	 * Creates a file based on the given parameters.

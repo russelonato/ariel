@@ -149,7 +149,7 @@ public class BasicLaundrymat implements ILaundrymat {
 
 		try {
 			if(!FileUtil.toFile(param[4], templateFileName).exists()) {
-				FileUtils.copyFileToDirectory(FileUtil.toFile(FileUtil.ROOT, templateFileName), FileUtil.toFolder(param[4]));
+				FileUtils.copyFileToDirectory(FileUtil.toFile(templateFileName), FileUtil.toFolder(param[4]));
 			}
 		}catch(IOException e) {
 			throw new SystemException(e.getMessage(), e.getCause());
@@ -162,7 +162,7 @@ public class BasicLaundrymat implements ILaundrymat {
 		Logger.getInstance().logInfo("Cleaning files.");
 		for (RPAInput rpaInput : rpaInputs) {
 			String searchClause = rpaInput.getProjectTag();
-			int range = (Integer) systemConfig.getConfig(SystemConfig.RANGE);
+			int range = Integer.parseInt((String) systemConfig.getConfig(SystemConfig.RANGE));
 
 			launderer.doLaundry(FileUtil.toFile(param[5], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause, range);
 		}
