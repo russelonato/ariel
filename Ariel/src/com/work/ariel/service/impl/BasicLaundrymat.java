@@ -14,6 +14,7 @@ import static com.work.ariel.property.impl.StringPropertyHandler.USERNAME;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -136,17 +137,18 @@ public class BasicLaundrymat implements ILaundrymat {
 	 * 
 	 * @param path
 	 * @param rpaInputs
-	 * @return the list of files that had been downloaded
+	 * @return list of failed downloads
 	 */
-	private List<RPAInput> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
-		for (int index = 0; index < rpaInputs.size(); index++) {
-			if (!FileUtil.toFile(path, rpaInputs.get(index).getMemberName(), FileUtil.EXT_TXT).exists()) {
-				logger.logInfo(rpaInputs.get(index).getMemberName() + " was not downloaded.");
-				rpaInputs.remove(index--);
+	private List<String> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
+		List<String> failedDownloads = new ArrayList<String>();
+
+		for (RPAInput rpaInput : rpaInputs) {
+			if (!FileUtil.toFile(path, rpaInput.getMemberName(), FileUtil.EXT_TXT).exists()) {
+				failedDownloads.add(rpaInput.getMemberName());
 			}
 		}
 
-		return rpaInputs;
+		return failedDownloads;
 	}
 
 	@Override
@@ -154,10 +156,15 @@ public class BasicLaundrymat implements ILaundrymat {
 		IRPAInputManager rpaInputManager = null;
 		List<RPAInput> rpaInputs = null;
 		ILaunderer launderer = null;
+		Date timeStart = null;
+		Date timeEnd = null;
 
 		rpaInputManager = new RPAInputManagerImpl();
 		rpaInputs = rpaInputManager.loadRPAInput(FileUtil.toFolder(param[4]));
 		launderer = new BasicLaunderer();
+		timeStart = new Date();
+		
+		logger.logInfo("*********Execution started*********");
 
 		Logger.getInstance().logInfo("Copying files.");
 
@@ -185,12 +192,28 @@ public class BasicLaundrymat implements ILaundrymat {
 				.execute(generateBat(generateCmdScript(rpaInputs, param[5], param[7], param[8], param[6], param[4])));
 
 		Logger.getInstance().logInfo("Cleaning files.");
-		for (RPAInput rpaInput : checkDownloadedFiles(param[4], rpaInputs)) {
+		List<String> failedDownloads = checkDownloadedFiles(param[4], rpaInputs);
+
+		for (RPAInput rpaInput : rpaInputs) {
 			String searchClause = rpaInput.getProjectTag();
 			int range = Integer.parseInt((String) systemConfig.getConfig(SystemConfig.RANGE));
 
-			launderer.doLaundry(FileUtil.toFile(param[4], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause,
-					range);
+			if (!failedDownloads.contains(rpaInput.getMemberName())) {
+				launderer.doLaundry(FileUtil.toFile(param[4], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause,
+						range);
+			}
+		}
+		
+		timeEnd = new Date();
+		
+		logger.logInfo("Execution completed. Total elapsed time: " + (timeEnd.getTime() - timeStart.getTime()) + " ms");
+		
+		if(failedDownloads.size() > 0) {
+			logger.logInfo("Execution has been completed but one or more files was not successfully downloaded. Please see list below: ");
+			
+			for(String failedDownload:failedDownloads) {
+				logger.logInfo(failedDownload);
+			}
 		}
 	}
 
