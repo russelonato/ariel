@@ -148,7 +148,9 @@ public class BasicLaundrymat implements ILaundrymat {
 		}
 
 		try {
-			FileUtils.copyFileToDirectory(FileUtil.toFile(param[4], templateFileName), FileUtil.toFolder(param[4]));
+			if(!FileUtil.toFile(param[4], templateFileName).exists()) {
+				FileUtils.copyFileToDirectory(FileUtil.toFile(FileUtil.ROOT, templateFileName), FileUtil.toFolder(param[4]));
+			}
 		}catch(IOException e) {
 			throw new SystemException(e.getMessage(), e.getCause());
 		}

@@ -24,6 +24,7 @@ public class FileUtil {
 
 	public static String EXT_TXT = ".txt";
 	public static String EXT_HTML = ".html";
+	public static String ROOT = "";
 
 	/**
 	 * Reads the file specified by the parameter and returns the text read as a
