@@ -24,6 +24,7 @@ public class FileUtil {
 
 	public static String EXT_TXT = ".txt";
 	public static String EXT_HTML = ".html";
+	public static String EXT_BAT = ".bat";
 	public static String ROOT = "";
 
 	/**
@@ -56,7 +57,9 @@ public class FileUtil {
 			throw new SystemException(e.getMessage(), e.getCause());
 		} finally {
 			try {
-				br.close();
+				if (br != null) {
+					br.close();
+				}
 			} catch (IOException e) {
 				throw new SystemException(e.getMessage(), e.getCause());
 			}
@@ -128,7 +131,7 @@ public class FileUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates a file based on the given parameters.
 	 * 
@@ -161,11 +164,12 @@ public class FileUtil {
 	public static File toFile(String path, String fileName, String extension) {
 		return toFile(path, fileName + extension);
 	}
-	
+
 	/**
 	 * Creates a file directory based on the given input.
 	 * 
-	 * @param path the directory
+	 * @param path
+	 *            the directory
 	 * @return the created file
 	 */
 	public static File toFolder(String path) {

@@ -42,7 +42,7 @@ public class BasicLaundrymat implements ILaundrymat {
 	/* Download Files */
 	public static final String SCRIPT_FILE = "script";
 	public static final String BAT_FILE = "executor";
-	
+
 	/**
 	 * Generates a cmd script based on the entered parameters. <code>param</code>
 	 * should be entered in the following order:
@@ -71,6 +71,7 @@ public class BasicLaundrymat implements ILaundrymat {
 		commands = new ArrayList<String>();
 		try {
 			cmdScript = File.createTempFile(SCRIPT_FILE, FileUtil.EXT_TXT);
+			cmdScript.deleteOnExit();
 		} catch (IOException e) {
 			throw new SystemException(e.getMessage(), e.getCause());
 		}
@@ -109,23 +110,43 @@ public class BasicLaundrymat implements ILaundrymat {
 	 */
 	private File generateBat(File file) throws SystemException {
 		File batFile = null;
-		String batFormat = "ftp -s:<filePath>";
-		String command;
+		List<String> commandLines = FileUtil.readFile(new File("resource\\bat_template.txt"));
+		List<String> commands = null;
 
 		logger.logInfo("Generating Bat file");
 
 		try {
-			batFile = File.createTempFile(BAT_FILE, FileUtil.EXT_TXT);
+			batFile = File.createTempFile(BAT_FILE, FileUtil.EXT_BAT);
+			batFile.deleteOnExit();
 		} catch (IOException e) {
 			throw new SystemException(e.getMessage(), e.getCause());
 		}
 
-		command = batFormat.replaceFirst(props.getProperty(BAT, FILE),
-				Matcher.quoteReplacement(file.getAbsolutePath()));
+		commands = new ArrayList<String>();
+		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE), file.getAbsolutePath()));
+		commands.add(commandLines.get(1));
 
-		FileUtil.writeFile(batFile, command);
+		FileUtil.writeFile(batFile, commands);
 
 		return batFile;
+	}
+
+	/**
+	 * Checks if all files were downloaded properly.
+	 * 
+	 * @param path
+	 * @param rpaInputs
+	 * @return the list of files that had been downloaded
+	 */
+	private List<RPAInput> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
+		for (int index = 0; index < rpaInputs.size(); index++) {
+			if (!FileUtil.toFile(path, rpaInputs.get(index).getMemberName(), FileUtil.EXT_TXT).exists()) {
+				logger.logInfo(rpaInputs.get(index).getMemberName() + " was not downloaded.");
+				rpaInputs.remove(index--);
+			}
+		}
+
+		return rpaInputs;
 	}
 
 	@Override
@@ -133,38 +154,43 @@ public class BasicLaundrymat implements ILaundrymat {
 		IRPAInputManager rpaInputManager = null;
 		List<RPAInput> rpaInputs = null;
 		ILaunderer launderer = null;
-		
+
 		rpaInputManager = new RPAInputManagerImpl();
 		rpaInputs = rpaInputManager.loadRPAInput(FileUtil.toFolder(param[4]));
 		launderer = new BasicLaunderer();
-		
+
 		Logger.getInstance().logInfo("Copying files.");
 
 		String templateFileName = null;
+		String templateOutputFileName = null;
 		if (param[0].equals(SystemConstants.DOCUMENT_TYPE_PAFA)) {
 			templateFileName = (String) systemConfig.getConfig(SystemConfig.TEMPLATE_FILE_PAFA);
 		} else if (param[0].equals(SystemConstants.DOCUMENT_TYPE_TP)) {
 			templateFileName = (String) systemConfig.getConfig(SystemConfig.TEMPLATE_FILE_TP);
 		}
+		templateOutputFileName = "CATPDService" + "_" + "DBSi" + param[2] + "_" + param[0] + "_" + param[3];
 
 		try {
-			if(!FileUtil.toFile(param[4], templateFileName).exists()) {
-				FileUtils.copyFileToDirectory(FileUtil.toFile(templateFileName), FileUtil.toFolder(param[4]));
+			if (!FileUtil.toFile(param[4], templateOutputFileName).exists()) {
+				FileUtils.copyFile(FileUtil.toFile(templateFileName),
+						FileUtil.toFile(param[4], templateOutputFileName));
 			}
-		}catch(IOException e) {
+		} catch (IOException e) {
 			throw new SystemException(e.getMessage(), e.getCause());
 		}
-		
+
 		Logger.getInstance().logInfo("Download files executed.");
 		BatExecutor batExecutor = new BatExecutor();
-		batExecutor.execute(generateBat(generateCmdScript(rpaInputs, param[5], param[7], param[8], param[6], param[4])));
-		
+		batExecutor
+				.execute(generateBat(generateCmdScript(rpaInputs, param[5], param[7], param[8], param[6], param[4])));
+
 		Logger.getInstance().logInfo("Cleaning files.");
-		for (RPAInput rpaInput : rpaInputs) {
+		for (RPAInput rpaInput : checkDownloadedFiles(param[4], rpaInputs)) {
 			String searchClause = rpaInput.getProjectTag();
 			int range = Integer.parseInt((String) systemConfig.getConfig(SystemConfig.RANGE));
 
-			launderer.doLaundry(FileUtil.toFile(param[5], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause, range);
+			launderer.doLaundry(FileUtil.toFile(param[4], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause,
+					range);
 		}
 	}
 

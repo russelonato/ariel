@@ -1,5 +1,8 @@
 package com.work.ariel.exception;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import com.work.ariel.util.Logger;
 
 /**
@@ -16,6 +19,10 @@ public class SystemException extends Exception {
 
 	public SystemException(String message, Throwable cause) {
 		super(message, cause);
-		Logger.getInstance().logError(this.getStackTrace().toString());
+		
+		StringWriter writer = new StringWriter();
+		printStackTrace(new PrintWriter(writer));
+		Logger.getInstance().logError(writer.toString());
+		printStackTrace();
 	}
 }

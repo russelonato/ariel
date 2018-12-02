@@ -33,6 +33,8 @@ public class JHintAreaPanel extends JPanel{
 		setBorder(BorderFactory.createTitledBorder(props.getProperty(HINT)));
 		setPreferredSize(new Dimension(780, 100));
 		
+		txa_hint.setEditable(false);
+		
 		add(txa_hint);
 		
 		setLayout();
