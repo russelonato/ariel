@@ -1,2 +1,0 @@
-[2018/09/30 14:54:796]I - Execution started.
-[2018/09/30 14:54:797]E - Choose document type! (PAFA or TD)

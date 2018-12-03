@@ -1,8 +1,8 @@
 package com.work.ariel.dao.interfce;
 
-import java.io.IOException;
 import java.util.List;
 
+import com.work.ariel.exception.SystemException;
 import com.work.ariel.model.RPAInput;
 
 /**
@@ -20,7 +20,7 @@ public interface IRPAInputDAO {
 	 * 
 	 * @param filepath
 	 * @return all records from RPA_Input
-	 * @throws IOException
+	 * @throws SystemException
 	 */
-	public List<RPAInput> readRPAInput(String filepath)throws IOException;
+	public List<RPAInput> readRPAInput(String filepath)throws SystemException;
 }

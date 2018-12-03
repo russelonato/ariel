@@ -7,11 +7,13 @@ import com.work.ariel.property.interfce.PropertyHandler;
  * 
  * @since Ariel v2.0
  * @version 1.0
- * @author Onato, Russel Jan
+ * @author Gabrang, Mary Ann
  *
  */
-public class StringPropertyHandler extends PropertyHandler{
-	
+public class StringPropertyHandler extends PropertyHandler {
+
+	private static PropertyHandler instance = null;
+
 	// Generic
 	public static String FTP_DETAILS = "ftpDetails";
 	public static String FOLDER_LOCATION = "folderLocation";
@@ -30,34 +32,41 @@ public class StringPropertyHandler extends PropertyHandler{
 	public static String HINT = "hint";
 	public static String SPACING = "spacing";
 	public static String SAVE = "save";
-	public static String CANCEL= "cancel";
+	public static String CANCEL = "cancel";
 	public static String EXECUTE = "execute";
 	public static String ABOUT = "about";
-	
-	//Tooltip
+	public static String LIBRARY = "library";
+	public static String FILENAME = "fileName";
+	public static String MEMBER_NAME = "memberName";
+	public static String FILE = "file";
+
+	// Tooltip
 	public static String TOOLIP = "tooltip";
-	
+
 	// Combo Values
 	public static String CMB_DB_VERSION = "cmbDbVersion";
+
+	// CMD Script
+	public static String CMD_SCRIPT = "cmdScript";
 	
-	private static PropertyHandler instance = null;
-	
+	// Bat
+	public static String BAT = "bat";
+
 	private StringPropertyHandler() {
 		path = "resource\\string.properties";
 	}
-	
-	
+
 	/**
 	 * Retrieves the instance of this class
 	 * 
 	 * @return the instance of this class
 	 */
 	public static PropertyHandler getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new StringPropertyHandler();
 		}
-		
+
 		return instance;
 	}
-	
+
 }

@@ -1,7 +1,6 @@
 package com.work.ariel.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.work.ariel.system.SystemMessages;
+import com.work.ariel.exception.SystemException;
 
 /**
  * A utility class for reading an external excel file.
@@ -25,16 +24,19 @@ import com.work.ariel.system.SystemMessages;
  *
  */
 public class ExcelReader {
-	
+
 	/**
-	 * Retrieves the data from the specified sheetName and file as a two-dimensional List of String.
+	 * Retrieves the data from the specified sheetName and file as a two-dimensional
+	 * List of String.
 	 * 
-	 * @param file target file
-	 * @param sheetName target name of sheet
+	 * @param file
+	 *            target file
+	 * @param sheetName
+	 *            target name of sheet
 	 * @return Retrieved data
 	 * @throws IOException
 	 */
-	public List<List<String>> getTable(File file, String sheetName) throws IOException {
+	public static List<List<String>> getTable(File file, String sheetName) throws SystemException {
 		Workbook workbook = null;
 		Sheet sheet = null;
 		Iterator<Row> rowIterator = null;
@@ -42,7 +44,7 @@ public class ExcelReader {
 
 		try {
 			workbook = new XSSFWorkbook(file);
-			
+
 			sheet = workbook.getSheet(sheetName);
 			rowIterator = sheet.iterator();
 
@@ -65,23 +67,21 @@ public class ExcelReader {
 					rowData.add(cell.getStringCellValue());
 
 				}
-				
+
 				tableData.add(rowData);
 
 			}
-		} catch(FileNotFoundException e) {
-			throw new FileNotFoundException(e.getMessage());
-		}catch (IOException e) {
-			throw new IOException(SystemMessages.FILE_IS_IN_USE);
+		} catch (IOException e) {
+			throw new SystemException(e.getMessage(), e.getCause());
 		} catch (InvalidFormatException e) {
-			e.printStackTrace();
+			throw new SystemException(e.getMessage(), e.getCause());
 		} finally {
 			try {
-				if(workbook != null) {
+				if (workbook != null) {
 					workbook.close();
 				}
 			} catch (IOException e) {
-
+				throw new SystemException(e.getMessage(), e.getCause());
 			}
 		}
 		return tableData;

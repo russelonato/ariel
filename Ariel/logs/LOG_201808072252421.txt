@@ -1,2 +1,0 @@
-[2018/08/07 22:52:421] - I - Automation started.
-[2018/08/07 22:52:423] - I - Copying template files.

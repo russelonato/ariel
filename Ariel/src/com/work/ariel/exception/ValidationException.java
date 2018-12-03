@@ -8,10 +8,10 @@ package com.work.ariel.exception;
  * @author Gabrang, Mary Ann
  *
  */
-public class ValidationException extends Exception{
+public class ValidationException extends SystemException{
 	private static final long serialVersionUID = -1134120843892704696L;
 
 	public ValidationException(String message) {
-		super(message);
+		super(message, null);
 	}
 }

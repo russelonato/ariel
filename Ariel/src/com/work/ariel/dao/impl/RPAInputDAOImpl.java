@@ -1,14 +1,15 @@
 package com.work.ariel.dao.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.work.ariel.dao.interfce.IRPAInputDAO;
+import com.work.ariel.exception.SystemException;
 import com.work.ariel.model.RPAInput;
 import com.work.ariel.system.SystemConfig;
 import com.work.ariel.util.ExcelReader;
+import com.work.ariel.util.FileUtil;
 
 /**
  * Implementation class that implements IRPAInputDAO
@@ -22,15 +23,13 @@ public class RPAInputDAOImpl implements IRPAInputDAO{
 	private final SystemConfig systemConfig = SystemConfig.getInstance();
 
 	@Override
-	public List<RPAInput> readRPAInput(String filepath) throws IOException {
+	public List<RPAInput> readRPAInput(String filepath) throws SystemException {
 		File inputFile = null;
-		ExcelReader reader = null;
 		List<RPAInput> rpaInputs = null;
 		
-		inputFile = new File(filepath + "\\" + systemConfig.getConfig(SystemConfig.INPUT_FILE));
-		reader = new ExcelReader();
+		inputFile = FileUtil.toFile(filepath, (String) systemConfig.getConfig(SystemConfig.INPUT_FILE));
 		
-		for(List<String> row : reader.getTable(inputFile, (String) systemConfig.getConfig(SystemConfig.INPUT_SHEET))) {
+		for(List<String> row : ExcelReader.getTable(inputFile, (String) systemConfig.getConfig(SystemConfig.INPUT_SHEET))) {
 			if(rpaInputs == null) {
 				rpaInputs = new ArrayList<RPAInput>();
 				continue;

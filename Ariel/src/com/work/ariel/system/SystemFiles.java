@@ -12,8 +12,4 @@ public class SystemFiles {
 	
 	/* Configuration Files */
 	public static final String CONFIG_FILE = "config.ini";
-	
-	/* Download Files */ 
-	public static final String SCRIPT_FILE = "script.txt";
-	public static final String BAT_FILE = "executor.bat";
 }
