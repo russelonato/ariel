@@ -133,22 +133,22 @@ public class BasicLaundrymat implements ILaundrymat {
 	}
 
 	/**
-	 * Checks if all files were downloaded properly.
+	 * Checks if the passed rpaInputs already exists.
 	 * 
 	 * @param path
 	 * @param rpaInputs
-	 * @return list of failed downloads
+	 * @return list of not files not downloaded
 	 */
-	private List<String> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
-		List<String> failedDownloads = new ArrayList<String>();
+	private List<RPAInput> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
+		List<RPAInput> missingFiles = new ArrayList<RPAInput>();
 
 		for (RPAInput rpaInput : rpaInputs) {
 			if (!FileUtil.toFile(path, rpaInput.getMemberName(), FileUtil.EXT_TXT).exists()) {
-				failedDownloads.add(rpaInput.getMemberName());
+				missingFiles.add(rpaInput);
 			}
 		}
 
-		return failedDownloads;
+		return missingFiles;
 	}
 
 	@Override
@@ -192,13 +192,13 @@ public class BasicLaundrymat implements ILaundrymat {
 				.execute(generateBat(generateCmdScript(rpaInputs, param[5], param[7], param[8], param[6], param[4])));
 
 		Logger.getInstance().logInfo("Cleaning files.");
-		List<String> failedDownloads = checkDownloadedFiles(param[4], rpaInputs);
+		List<RPAInput> failedDownloads = checkDownloadedFiles(param[4], rpaInputs);
 
 		for (RPAInput rpaInput : rpaInputs) {
 			String searchClause = rpaInput.getProjectTag();
 			int range = Integer.parseInt((String) systemConfig.getConfig(SystemConfig.RANGE));
 
-			if (!failedDownloads.contains(rpaInput.getMemberName())) {
+			if (!failedDownloads.contains(rpaInput)) {
 				launderer.doLaundry(FileUtil.toFile(param[4], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause,
 						range);
 			}
@@ -211,8 +211,8 @@ public class BasicLaundrymat implements ILaundrymat {
 		if(failedDownloads.size() > 0) {
 			logger.logInfo("Execution has been completed but one or more files was not successfully downloaded. Please see list below: ");
 			
-			for(String failedDownload:failedDownloads) {
-				logger.logInfo(failedDownload);
+			for(RPAInput failedDownload:failedDownloads) {
+				logger.logInfo(failedDownload.getMemberName());
 			}
 		}
 	}
