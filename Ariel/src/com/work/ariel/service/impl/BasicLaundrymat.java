@@ -84,7 +84,7 @@ public class BasicLaundrymat implements ILaundrymat {
 			commands.add(commandLines.get(3).replaceFirst(props.getProperty(CMD_SCRIPT, ENV_ASP_GROUP), param[3]));
 		}
 		commands.add(commandLines.get(4));
-		for (RPAInput rpaInput : rpaInputs) {
+		for (RPAInput rpaInput : checkDownloadedFiles(param[4], rpaInputs)) {
 			String line = commandLines.get(5);
 			line = line.replaceFirst(props.getProperty(CMD_SCRIPT, LIBRARY), rpaInput.getLibrary());
 			line = line.replaceFirst(props.getProperty(CMD_SCRIPT, FILENAME), rpaInput.getFileName());
