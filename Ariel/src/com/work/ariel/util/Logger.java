@@ -13,6 +13,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.FileUtils;
+
 import com.work.ariel.exception.SystemException;
 
 /**
@@ -36,6 +38,8 @@ public class Logger {
 		formatter = new SimpleDateFormat("yyyyMMddHHmmSS");
 		date = new Date();
 
+		FileUtil.toFolder("logs").mkdirs();
+		
 		logFile = new File("logs\\LOG_" + formatter.format(date) + ".txt");
 	}
 
