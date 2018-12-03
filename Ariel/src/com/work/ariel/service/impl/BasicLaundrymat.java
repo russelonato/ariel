@@ -80,11 +80,18 @@ public class BasicLaundrymat implements ILaundrymat {
 		commands.add(commandLines.get(0).replaceFirst(props.getProperty(CMD_SCRIPT, LPAR_NUMBER), param[0]));
 		commands.add(commandLines.get(1).replaceFirst(props.getProperty(CMD_SCRIPT, USERNAME), param[1]));
 		commands.add(commandLines.get(2).replaceFirst(props.getProperty(CMD_SCRIPT, PASSWORD), param[2]));
+
+		List<RPAInput> missingFiles = checkDownloadedFiles(param[4], rpaInputs);
+
+		if (missingFiles.size() == 0) {
+			return null;
+		}
+
 		if (param[3] != null && !param[3].trim().isEmpty()) {
 			commands.add(commandLines.get(3).replaceFirst(props.getProperty(CMD_SCRIPT, ENV_ASP_GROUP), param[3]));
 		}
 		commands.add(commandLines.get(4));
-		for (RPAInput rpaInput : rpaInputs) {
+		for (RPAInput rpaInput : missingFiles) {
 			String line = commandLines.get(5);
 			line = line.replaceFirst(props.getProperty(CMD_SCRIPT, LIBRARY), rpaInput.getLibrary());
 			line = line.replaceFirst(props.getProperty(CMD_SCRIPT, FILENAME), rpaInput.getFileName());
@@ -116,6 +123,10 @@ public class BasicLaundrymat implements ILaundrymat {
 
 		logger.logInfo("Generating Bat file");
 
+		if (file == null) {
+			return null;
+		}
+
 		try {
 			batFile = File.createTempFile(BAT_FILE, FileUtil.EXT_BAT);
 			batFile.deleteOnExit();
@@ -124,7 +135,8 @@ public class BasicLaundrymat implements ILaundrymat {
 		}
 
 		commands = new ArrayList<String>();
-		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE), Matcher.quoteReplacement(file.getAbsolutePath())));
+		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE),
+				Matcher.quoteReplacement(file.getAbsolutePath())));
 		commands.add(commandLines.get(1));
 
 		FileUtil.writeFile(batFile, commands);
@@ -133,22 +145,22 @@ public class BasicLaundrymat implements ILaundrymat {
 	}
 
 	/**
-	 * Checks if all files were downloaded properly.
+	 * Checks if the passed rpaInputs already exists.
 	 * 
 	 * @param path
 	 * @param rpaInputs
-	 * @return list of failed downloads
+	 * @return list of not files not downloaded
 	 */
-	private List<String> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
-		List<String> failedDownloads = new ArrayList<String>();
+	private List<RPAInput> checkDownloadedFiles(String path, List<RPAInput> rpaInputs) {
+		List<RPAInput> missingFiles = new ArrayList<RPAInput>();
 
 		for (RPAInput rpaInput : rpaInputs) {
 			if (!FileUtil.toFile(path, rpaInput.getMemberName(), FileUtil.EXT_TXT).exists()) {
-				failedDownloads.add(rpaInput.getMemberName());
+				missingFiles.add(rpaInput);
 			}
 		}
 
-		return failedDownloads;
+		return missingFiles;
 	}
 
 	@Override
@@ -163,7 +175,7 @@ public class BasicLaundrymat implements ILaundrymat {
 		rpaInputs = rpaInputManager.loadRPAInput(FileUtil.toFolder(param[4]));
 		launderer = new BasicLaunderer();
 		timeStart = new Date();
-		
+
 		logger.logInfo("*********Execution started*********");
 
 		Logger.getInstance().logInfo("Copying files.");
@@ -186,33 +198,39 @@ public class BasicLaundrymat implements ILaundrymat {
 			throw new SystemException(e.getMessage(), e.getCause());
 		}
 
-		Logger.getInstance().logInfo("Download files executed.");
-		BatExecutor batExecutor = new BatExecutor();
-		batExecutor
-				.execute(generateBat(generateCmdScript(rpaInputs, param[5], param[7], param[8], param[6], param[4])));
+		File batFile = generateBat(generateCmdScript(rpaInputs, param[5], param[7], param[8], param[6], param[4]));
+
+		if (batFile != null) {
+			Logger.getInstance().logInfo("Download files executed.");
+			BatExecutor batExecutor = new BatExecutor();
+			batExecutor.execute(batFile);
+		}else {
+			Logger.getInstance().logInfo("All files already exist. No downloads have been executed.");
+		}
 
 		Logger.getInstance().logInfo("Cleaning files.");
-		List<String> failedDownloads = checkDownloadedFiles(param[4], rpaInputs);
+		List<RPAInput> failedDownloads = checkDownloadedFiles(param[4], rpaInputs);
 
 		for (RPAInput rpaInput : rpaInputs) {
 			String searchClause = rpaInput.getProjectTag();
 			int range = Integer.parseInt((String) systemConfig.getConfig(SystemConfig.RANGE));
 
-			if (!failedDownloads.contains(rpaInput.getMemberName())) {
+			if (!failedDownloads.contains(rpaInput)) {
 				launderer.doLaundry(FileUtil.toFile(param[4], rpaInput.getMemberName(), FileUtil.EXT_TXT), searchClause,
 						range);
 			}
 		}
-		
+
 		timeEnd = new Date();
-		
+
 		logger.logInfo("Execution completed. Total elapsed time: " + (timeEnd.getTime() - timeStart.getTime()) + " ms");
-		
-		if(failedDownloads.size() > 0) {
-			logger.logInfo("Execution has been completed but one or more files was not successfully downloaded. Please see list below: ");
-			
-			for(String failedDownload:failedDownloads) {
-				logger.logInfo(failedDownload);
+
+		if (failedDownloads.size() > 0) {
+			logger.logInfo(
+					"Execution has been completed but one or more files was not successfully downloaded. Please see list below: ");
+
+			for (RPAInput failedDownload : failedDownloads) {
+				logger.logInfo(failedDownload.getMemberName());
 			}
 		}
 	}
