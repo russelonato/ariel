@@ -124,7 +124,7 @@ public class BasicLaundrymat implements ILaundrymat {
 		}
 
 		commands = new ArrayList<String>();
-		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE), file.getAbsolutePath()));
+		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE), Matcher.quoteReplacement(file.getAbsolutePath())));
 		commands.add(commandLines.get(1));
 
 		FileUtil.writeFile(batFile, commands);
@@ -175,7 +175,7 @@ public class BasicLaundrymat implements ILaundrymat {
 		} else if (param[0].equals(SystemConstants.DOCUMENT_TYPE_TP)) {
 			templateFileName = (String) systemConfig.getConfig(SystemConfig.TEMPLATE_FILE_TP);
 		}
-		templateOutputFileName = "CATPDService" + "_" + "DBSi" + param[2] + "_" + param[0] + "_" + param[3];
+		templateOutputFileName = "CATPDService" + "_" + "DBSi" + param[2] + "_" + param[0] + "_" + param[3] + ".doc";
 
 		try {
 			if (!FileUtil.toFile(param[4], templateOutputFileName).exists()) {
