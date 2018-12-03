@@ -124,7 +124,7 @@ public class BasicLaundrymat implements ILaundrymat {
 		}
 
 		commands = new ArrayList<String>();
-		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE), file.getAbsolutePath()));
+		commands.add(commandLines.get(0).replaceFirst(props.getProperty(BAT, FILE), Matcher.quoteReplacement(file.getAbsolutePath())));
 		commands.add(commandLines.get(1));
 
 		FileUtil.writeFile(batFile, commands);
