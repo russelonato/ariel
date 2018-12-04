@@ -19,8 +19,9 @@ public class BasicLaunderer implements ILaunderer {
 		for(String line:lines) {
 			if(line.contains(clause)) {
 				edittedLines.add("<span style=\"white-space: pre; background-color: #00FFFF;\">" + line + "</span><br/>");
+			}else {
+				edittedLines.add("<span style=\"white-space: pre;\">" + line + "</span><br/>");
 			}
-			edittedLines.add("<span style=\"white-space: pre;\">" + line + "</span><br/>");
 		}
 
 		edittedLines.add("</body>");
