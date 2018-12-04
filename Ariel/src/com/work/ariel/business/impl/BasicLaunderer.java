@@ -10,6 +10,24 @@ import com.work.ariel.util.FileUtil;
 
 public class BasicLaunderer implements ILaunderer {
 
+	private List<String> printToHtml(List<String> lines, String clause){
+		List<String> edittedLines = new ArrayList<String>();
+		
+		edittedLines.add("<html>");
+		edittedLines.add("<body>");
+		
+		for(String line:lines) {
+			if(line.contains(clause)) {
+				edittedLines.add("<span style='background-color: #40e0d0'>" + line + "</span>");
+			}
+		}
+
+		edittedLines.add("</body>");
+		edittedLines.add("</html>");
+		
+		return edittedLines;
+	}
+	
 	@Override
 	public void doLaundry(File input, String clause, int range) throws SystemException {
 		List<String> rawLines = null;
@@ -91,7 +109,8 @@ public class BasicLaunderer implements ILaunderer {
 		}
 
 		if (cleanLines != null) {
-			FileUtil.writeFile(FileUtil.toFile(input.getParent(), "edit_" + input.getName()), cleanLines);
+			File output = FileUtil.toFile(input.getParent(), "edit_" + input.getName().substring(0, input.getName().indexOf(".")), FileUtil.EXT_HTML);
+			FileUtil.writeFile(output, printToHtml(cleanLines, clause));
 		}
 	}
 
