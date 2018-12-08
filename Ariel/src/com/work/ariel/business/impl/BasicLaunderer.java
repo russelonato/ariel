@@ -88,9 +88,6 @@ public class BasicLaunderer implements ILaunderer {
 				if (isReadyToPrint) {
 					if (!isSectionPrinted && rawLines.get(currentSectionIndex).toLowerCase().contains("section")) {
 						cleanLines.add(rawLines.get(currentSectionIndex));
-						cleanLines.add(":");
-						cleanLines.add(":");
-						cleanLines.add(":");
 						isSectionPrinted = true;
 					}
 
