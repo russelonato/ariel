@@ -1,19 +1,26 @@
 package com.work.ariel.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
-import org.apache.commons.io.FileUtils;
+import javax.mail.internet.MimeMultipart;
 
 import com.work.ariel.exception.SystemException;
 
@@ -27,7 +34,7 @@ import com.work.ariel.exception.SystemException;
  */
 public class Logger {
 	private static Logger instance;
-	
+
 	private File logFile;
 	private StringBuilder logs;
 
@@ -39,7 +46,7 @@ public class Logger {
 		date = new Date();
 
 		FileUtil.toFolder("logs").mkdirs();
-		
+
 		logFile = new File("logs\\LOG_" + formatter.format(date) + ".txt");
 	}
 
@@ -57,7 +64,8 @@ public class Logger {
 	}
 
 	/**
-	 * Logs the passed message into a log file formatted to include log type and datetime.
+	 * Logs the passed message into a log file formatted to include log type and
+	 * datetime.
 	 * 
 	 * @param logType
 	 * @param message
@@ -70,11 +78,11 @@ public class Logger {
 		date = new Date();
 
 		message = "[" + formatter.format(date) + "]" + message;
-		
-		if(logs == null) {
+
+		if (logs == null) {
 			logs = new StringBuilder();
 		}
-		
+
 		logs.append(message + "\n");
 
 		try {
@@ -83,11 +91,11 @@ public class Logger {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void logInfo(String message) {
 		log("I - " + message);
 	}
-	
+
 	public void logWarning(String message) {
 		log("W - " + message);
 	}
@@ -95,32 +103,67 @@ public class Logger {
 	public void logError(String message) {
 		log("E - " + message);
 	}
-	
+
 	public void logSevere(String message) {
 		log("S - " + message);
 	}
-	
-	public void submitLogs() {
-		final String adminAddress = null; // TODO Place actual admin address here
-		final String subject = logFile.getName();
-		
-		Properties properties = null;
-		Session session = null;
 
-		properties = new Properties();
-		session = Session.getDefaultInstance(properties, null);
-		
+	public void submitLogs(String username, String password) throws SystemException{
+		String fromAddress = ""; // TODO use correct email
+		String toAddress = ""; // TODO use correct email
+
+		Properties props = new Properties();
+		InputStream inStream = null;
 		try {
-		  Message msg = new MimeMessage(session);
-		  msg.setFrom(new InternetAddress(adminAddress));
-		  msg.addRecipient(Message.RecipientType.TO, new InternetAddress(adminAddress));
-		  msg.setSubject(subject);
-		  msg.setText(logs.toString());
-		  Transport.send(msg);
-		} catch (AddressException e) {
-			e.printStackTrace();
+			inStream = new FileInputStream("resource//mail.properties");
+			props.load(inStream);
+		} catch (IOException e) {
+			throw new SystemException(e.getMessage(), e.getCause());
+		}finally {
+			if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					throw new SystemException(e.getMessage(), e.getCause());
+				}
+			}
+		}
+
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+
+		try {
+
+			Message message = null;
+			BodyPart messageBodyPart = null; // Create the message part
+			BodyPart fileBodyPart = null; // Create the message part
+			Multipart multipart = null;
+			
+			message = new MimeMessage(session); // Create a default MimeMessage object.
+			multipart = new MimeMultipart(); // Create a multipar message
+			
+			message.setFrom(new InternetAddress(fromAddress));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+			message.setSubject("[REPORT] Ariel Logs: " + logFile.getName()); // Set Subject: header field
+			
+			messageBodyPart = new MimeBodyPart(); // Create the message part
+			messageBodyPart.setText("Please see logs attached."); // Now set the actual message
+			
+			fileBodyPart = new MimeBodyPart(); // Part two is attachment
+			fileBodyPart.setDataHandler(new DataHandler(new FileDataSource(logFile.getAbsolutePath())));
+			fileBodyPart.setFileName(logFile.getAbsolutePath());
+			
+			multipart.addBodyPart(messageBodyPart); // Set text message part
+			multipart.addBodyPart(fileBodyPart); // Set the file part
+
+			message.setContent(multipart); // Send the complete message parts
+
+			Transport.send(message);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			throw new SystemException(e.getMessage(), e.getCause());
 		}
 	}
 }

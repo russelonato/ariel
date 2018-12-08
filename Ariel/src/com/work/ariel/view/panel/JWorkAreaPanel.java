@@ -17,6 +17,7 @@ import com.work.ariel.property.interfce.PropertyHandler;
 import com.work.ariel.service.impl.BasicLaundrymat;
 import com.work.ariel.service.interfce.ILaundrymat;
 import com.work.ariel.system.SystemMessages;
+import com.work.ariel.util.Logger;
 import com.work.ariel.validation.WorkAreaPanelValidation;
 
 public class JWorkAreaPanel extends JPanel implements ActionListener {
@@ -87,7 +88,14 @@ public class JWorkAreaPanel extends JPanel implements ActionListener {
 			laundrymat.subtmitJob(documentType, teamName, dbsVersion, ticketNumber, folderLocation, lparNumber,
 					aspGroup, username, password);
 
-			JOptionPane.showMessageDialog(this, SystemMessages.EXECUTION_DONE, SystemMessages.EXECUTION_SUCCESSFUL, JOptionPane.INFORMATION_MESSAGE);
+			int option = JOptionPane.showConfirmDialog(this, SystemMessages.EXECUTION_DONE, SystemMessages.EXECUTION_SUCCESSFUL, JOptionPane.INFORMATION_MESSAGE);
+			if(option == JOptionPane.YES_OPTION) {
+				String user = JOptionPane.showInputDialog("Username");
+				String pass = JOptionPane.showInputDialog("Password");
+				
+				Logger.getInstance().submitLogs(user, pass);
+			}
+			
 		} catch (ValidationException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), SystemMessages.INVALID_INPUT,
 					JOptionPane.ERROR_MESSAGE);
