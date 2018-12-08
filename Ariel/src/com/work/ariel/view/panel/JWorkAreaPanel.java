@@ -87,8 +87,7 @@ public class JWorkAreaPanel extends JPanel implements ActionListener {
 			laundrymat.subtmitJob(documentType, teamName, dbsVersion, ticketNumber, folderLocation, lparNumber,
 					aspGroup, username, password);
 
-			JOptionPane.showMessageDialog(this, SystemMessages.EXECUTION_DONE, SystemMessages.EXECUTION_SUCCESSFUL,
-					JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(this, SystemMessages.EXECUTION_DONE, SystemMessages.EXECUTION_SUCCESSFUL, JOptionPane.INFORMATION_MESSAGE);
 		} catch (ValidationException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), SystemMessages.INVALID_INPUT,
 					JOptionPane.ERROR_MESSAGE);
